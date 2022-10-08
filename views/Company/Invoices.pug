@@ -1,0 +1,86 @@
+include ../Components/Header
+block content
+  br
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-left.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800=" تۆماری "+ invoices[0]['items'][0]['manufacturerCompany']
+        .container-fluid
+          .span
+          //- a.d-none.d-sm-inline-block.btn.btn-sm.btn-primary.shadow-sm.text-white.m-2(href="/Profiles/Invoices/List/"+profile[0]['cutomerID']['_id'])
+          //-   i.fas.fa-file-invoice.fa-sm.text-white-50
+          //-   |  تۆمارەکان(بە لیست)
+          //- a.d-none.d-sm-inline-block.btn.btn-sm.btn-info.shadow-sm.text-white.m-2(href="/Profiles/Invoices/"+profile[0]['cutomerID']['_id'])
+          //-   i.fas.fa-file-invoice.fa-sm.text-white-50
+          //-   |  تۆمارەکان(بە وەصڵ)
+          //- a.d-none.d-sm-inline-block.btn.btn-sm.btn-warning.shadow-sm.text-white.m-2(href="/Profiles/Favorates/"+profile[0]['cutomerID']['_id'])
+          //-   i.fas.fa-heart.fa-sm.text-white-50
+          //-   |  دڵخوازەکانی کڕیار
+          .p-4
+            .row
+              .form-group.col-md-3
+                label ناوی کۆمپانیا
+                input.form-control(type='text' readonly value=profile[0]['companyName'])
+              .form-group.col-md-3
+                label شوێن
+                input.form-control(type='text' readonly value=profile[0]['location'])
+              .form-group.col-md-3
+                label ژمارەی مۆبایل
+                input.form-control(type='text' readonly value=profile[0]['phoneNumber'])
+              .form-group.col-md-3
+                label بڕی قەرز
+                input.form-control(type='text' readonly value=profile[0]['remainedbalance'])
+          .row
+            each item,i in invoices
+              #accordionExample.accordion
+                .accordion-item
+                  h2(id="heading"+i).accordion-header
+                    .row
+                      button.accordion-button(type='button' data-mdb-toggle='collapse' data-mdb-target='#collapse'+i aria-expanded='true' aria-controls='collapse'+i)
+                        div="باری ژمارە: "+item['_id']['trailerNumber']
+                        .col-md-2="کۆی بەرهەم: "+item['count']
+                        .col-md-4="نرخی کۆی بار: "+parseFloat(item['amount']).toFixed(2)
+                        .col-md-4="بەروار: "+item['items'][0]['createdAt'].toLocaleString("en-GB")
+                        //- a.btn.btn-sm.btn-danger.m-2( title="ڕەشکردنەوەی تۆمار" style="padding: .25rem .4rem;font-size: .875rem;line-height: .5;border-radius: .2rem;" href="/Invoices/Delete/"+item['_id']['recordCode']+"/"+item['items'][0]['cutomerID']+"/"+item['items'][0]['status'])
+                        //-   span.icon.text-white-50
+                        //-     i.fas.fa-trash 
+                        //- a.btn.btn-sm.btn-primary.m-2( title="زیادکردنی بەرهەم" style="padding: .25rem .4rem;font-size: .875rem;line-height: .5;border-radius: .2rem;" href="/Invoices/NewItem/"+item['_id']['recordCode']+"/"+item['items'][0]['cutomerID'])
+                        //-   span.icon.text-white-50
+                        //-     i.fas.fa-plus-square
+
+                  .accordion-collapse.collapse.hide(aria-labelledby="heading"+i data-mdb-parent='#accordionExample' id="collapse"+i)
+                    .accordion-body
+                      .container-fluid.table-responsive
+                        table(id="clientTable").table.table-hover.table-sm.dt-responsive.table-striped.table-bordered
+                          thead(style="font-size: 12px;font-weight:bold;text-align:center; background-color: #3f87a6;color: #fff;" )
+                            tr(scope='col' style="text-align:center; font-size:90%")
+                              th(scope='col') #
+                              th(scope='col') زانیاری بەرهەم
+                              th(scope='col') ڕەنگ
+                              //- th(scope='col') ناوی بەرهەم
+                              //- th(scope='col') کۆمپانیای وەبەرهێن
+                              //- th(scope='col') پێوانەی تاک
+                              //- th(scope='col') جۆری بەرهەم
+                              //- th(scope='col') شوێنی بەکارهێنان
+                              //- th(scope='col') بڕی پێوانە
+                              th(scope='col') نرخی هاتوو
+                              th(scope='col') بڕی هاتوو
+                              th(scope='col') کۆی گشتی
+                          tbody
+                            each product,i in item['items']
+                              tr
+                                td=i+1
+                                td=product['itemModel'] +" / "+product['itemName']+" / "+product['itemUnit']+" / "+product['itemType']
+                                //- td=
+                                //- td=product['manufacturerCompany']
+                                //- td=product['itemUnit']
+                                //- td=product['itemType']
+                                //- td=product['usedIn']
+                                //- td=product['weight']
+                                td=product['color']
+                                td=product['camePrice']
+                                td=product['totalQuantity']
+                                td=(parseFloat(product['totalQuantity'])*parseFloat(product['camePrice'])).toFixed(2)
+
+
+

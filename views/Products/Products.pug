@@ -1,0 +1,131 @@
+include ../Components/Header
+append styles 
+  style.
+    .table-hover tbody tr:hover td {
+      background-color: #D1D119;
+      }
+block content
+  br
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-left.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800=title
+      .span
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-secondary.shadow-sm.text-white.m-1(onclick="printDiv('printableArea')")
+          i.fas.fa-print.fa-sm.text-white-50
+          |  چاپکردن
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-primary.shadow-sm.text-white.m-1(href="/NewProduct")
+          i.fas.fa-plus-square.fa-sm.text-white-50
+          |  بەرهەمی نوێ
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-warning.shadow-sm.text-white.m-1(href="/NewTrailer")
+          i.fas.fa-truck-moving.fa-sm.text-white-50
+          |  بار‌هەڵگری نوێ
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-success.shadow-sm.text-white.m-1(href="/Products/Print")
+          i.fas.fa-print.fa-sm.text-white-50
+          |  بەرهەمەمی بەردەست
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-info.shadow-sm.text-white.m-1(href="/Products/SoldProducts")
+          i.fas.fa-print.fa-sm.text-white-50
+          |  بەرهەمە فرۆشراوەکان
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-danger.shadow-sm.text-white.m-1(href="/Report/ListOfPrice")
+          i.fas.fa-print.fa-sm.text-white-50
+          |  لیستی نرخەکانی تاک و محل
+    .container
+      != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class="alert alert-danger") #{error.msg}
+    hr
+    .row
+      .container-fluid.table-responsive(id="printableArea")
+        table(id="productTable").table.table-hover.table-lg.table-striped
+          thead.thead-light
+            tr(style="text-align:center; font-size:90%")
+              th(scope='col') بڕاندی بەرهەم
+              th(scope='col') ناوی بەرهەم
+              th(scope='col') وڵات
+              th(scope='col') کۆمپانیای وەبەرهێن
+              th(scope='col') پێوانەی گشتی
+              th(scope='col') پێوانەی تاک
+              th(scope='col') جۆری بەرهەم
+              th(scope='col') شوێنی بەکارهێنان
+              th(scope='col') بڕی پێوانە
+              th(scope='col') ڕەنگ
+              th(scope='col') بڕی بەردەست
+              th(scope='col') کردارەکان 
+          tbody
+  script.
+    //Print Section
+    function printDiv(divName) {
+      var originalContents = document.body.innerHTML;
+      $('table thead tr').find('td:eq(6),th:eq(6)').remove();
+      $('table thead tr').find('td:eq(6),th:eq(6)').remove();
+      $('table thead tr').find('td:eq(9),th:eq(9)').remove();
+
+
+      $('table tbody tr').find('td:eq(6),th:eq(6)').remove();
+      $('table tbody tr').find('td:eq(6),th:eq(6)').remove();
+      $('table tbody tr').find('td:eq(9),th:eq(9)').remove();
+
+      //- $('table thead tr').find('td:eq(1),th:eq(1)').remove();
+      //- $('table thead tr').find('td:eq(2),th:eq(2)').remove();
+      //- $('table thead tr').find('td:eq(3),th:eq(3)').remove();
+
+      //- $('table tbody tr').find('td:eq(1),th:eq(1)').remove();
+      //- $('table tbody tr').find('td:eq(1),th:eq(1)').remove();
+      //- $('table tbody tr').find('td:eq(2),th:eq(2)').remove();
+      //- $('table tbody tr').find('td:eq(3),th:eq(3)').remove();
+      //- $('table tbody tr').find('td:eq(4),th:eq(4)').remove();
+      var printContents = document.getElementById(divName).innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+
+    $(document).ready(function() {
+      $('#productTable').DataTable({
+        "ordering": false,
+        "processing": true,
+        "serverSide": true,
+        "pageLength": 50,        
+        "lengthMenu": [[10, 25, 50, 250], [10, 25, 50, 250]],
+        "ajax": {url:"/Products/Parser",type:"POST"},
+        'columns':
+          [
+            { 'data': 'itemModel', "defaultContent": "", 'name': 'itemModel' },
+            { 'data': 'itemName', "defaultContent": "", 'name': 'itemName' },
+            { 'data': 'countryCompany', "defaultContent": "N", 'name': 'countryCompany' },
+            { 'data': 'manufacturerCompany', "defaultContent": "X", 'name': 'manufacturerCompany' },
+            { 'data': 'unit', "defaultContent": "X", 'name': 'unit' },
+            { 'data': 'itemUnit', "defaultContent": "X", 'name': 'itemUnit' },
+            { 'data': 'itemType', "defaultContent": "X", 'name': 'itemType' },
+            { 'data': 'usedIn', "defaultContent": "N", 'name': 'usedIn' },
+            { 'data': 'weight', "defaultContent": "N", 'name': 'weight' },
+            { 'data': 'color', "defaultContent": "N", 'name': 'color' },
+            { 'data': 'totalQuantity', "defaultContent": "N", 'name': 'totalQuantity' },
+            { 
+              data: '_id', 
+              render: function ( data, type, row, meta ) {
+                var object=[];
+                object[0]= "<a class='btn btn-sm btn-info m-1' title='تۆماری بەرهەم' href='/Products/"+data+"/invoices' style='padding: .25rem .4rem;font-size: .875rem;line-height: .5;border-radius: .2rem;'><span class='icon text-white-50'><i class='fas fa-file-invoice'></i></span></a>";
+                object[1]="<a class='btn btn-sm btn-warning m-1' href='/Products/"+data+"/Modification' title='نوێکردنەوەی بەرهەم' style='padding: .25rem .4rem;font-size: .875rem;line-height: .5;border-radius: .2rem;'><span class='icon text-white-50'><i class='fas fa-pencil-alt'></i></span></a>";
+                object[2]="<a class='btn btn-sm btn-danger m-1' href='/Products/Remove/"+data+"'title='ڕەشکردنەوەی بەرهەم' style='padding: .25rem .4rem;font-size: .875rem;line-height: .5;border-radius: .2rem;><span class='icon text-white-50'><i class='fas fa-trash-alt'></i></span></a>";
+                object[3]="<a class='btn btn-sm btn-success m-1' href='/Products/"+data+"/Clone' title='لەبەرگرتنەوەی بەرهەم' style='padding: .25rem .4rem;font-size: .875rem;line-height: .5;border-radius: .2rem;><span class='icon text-white-50'><i class='fas fa-copy'></i></span></a>";
+                return object;
+              } 
+            },
+
+          ],
+          "columnDefs": [
+            {
+              "targets": [0,1,2,3,4,5,6,7,8,9,10],
+              "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).css("font-weight","bold");
+                $(td).css("text-align","center");
+              }
+            }
+          ],
+        "deferRender": true,
+        "searching": true,
+        "paging": true
+      });
+    } );

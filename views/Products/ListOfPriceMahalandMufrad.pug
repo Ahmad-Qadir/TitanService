@@ -1,0 +1,59 @@
+include ../Components/Header
+append styles 
+  style.
+    .table-hover tbody tr:hover td {
+      background-color: #D1D119;
+      }
+block content
+  br
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-left.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800=title
+      .span
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-secondary.shadow-sm.text-white.m-1(onclick="printDiv('printableArea')")
+          i.fas.fa-print.fa-sm.text-white-50
+          |  چاپکردن
+    .container
+      != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class="alert alert-danger") #{error.msg}
+    hr
+    .row
+      .container-fluid.table-responsive(id="printableArea")
+        table(id="productTable").table.table-hover.table-sm.dt-responsive.table-striped.table-bordered
+          thead.thead-light(style="font-size: 12px;font-weight:bold;text-align:center; background-color: #3f87a6;color: #fff;" )
+            tr(style="text-align:center; font-size:90%")
+              th(scope='col') #
+              th(scope='col') بەرهەم
+              th(scope='col') نرخی تاک
+              th(scope='col') نرخی محل
+          tbody
+            each item,i in products
+              tr
+                td(scope="col")=i+1
+                td(scope='col')=item['itemModel']+" / "+item['itemName']+" / "+item['color']+" / "+item['weight']
+                td(scope='col')=item['sellPriceMufrad']
+                td(scope='col')=item['sellPriceMahal']
+
+
+
+  script.
+    //Print Section
+    function printDiv(divName) {
+      var originalContents = document.body.innerHTML;
+      $('table thead tr').find('td:eq(6),th:eq(6)').remove();
+      $('table thead tr').find('td:eq(6),th:eq(6)').remove();
+      $('table thead tr').find('td:eq(9),th:eq(9)').remove();
+
+
+      $('table tbody tr').find('td:eq(6),th:eq(6)').remove();
+      $('table tbody tr').find('td:eq(6),th:eq(6)').remove();
+      $('table tbody tr').find('td:eq(9),th:eq(9)').remove();
+      var printContents = document.getElementById(divName).innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+

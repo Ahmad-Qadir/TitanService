@@ -1,0 +1,57 @@
+include ../Components/Header
+block content
+  br
+  .container
+    // Page Heading
+    .d-sm-flex.align-items-left.justify-content-between.mb-4
+    .jumbotron
+      .row
+        .container-fluid.table-responsive
+          form(method='POST' action="/CalculationCheck")
+            h2 زانیاری ڕاپۆرتی داواکراو
+            .row
+              //- .form-group.col-md-4
+              //-   label جۆری تۆمار
+              //-   select(name="status" class="form-control")
+              //-     option(value="all") هەموو جۆرەکان
+              //-     option(value="Partner Request") داواکاری پشکدار
+              //-     option(value="Customer Request") فرۆشتن
+              //-     option(value="Recovered") گەڕاوە
+              //-     option(value="Compensate") پارەدان
+              //-     option(value="New Trailer") باری نوێ
+              //-     option(value="New Product") بەرهەمی نوێ
+              .form-group.col-md-2
+                label بەرواری سەرەتا
+                input.form-control(name="startDate" type='date' placeholder='بەرواری سەرەتا')
+              .form-group.col-md-2
+                label بەرواری کۆتا
+                input.form-control(name="endDate" type='date' placeholder='بەرواری کۆتا')
+              .form-group.col-md-4
+                label بەرهەم
+                select(name="itemID" class="form-control") 
+                  option(value="") هەموو بەرهەمەکان
+                  each item,i in products
+                    option(value=item['_id'])=item['itemModel'] +"/"+item['itemName']+"/"+item['color']+"/"+item['weight']
+              .form-group.col-md-4
+                label کڕیار
+                select(name="customerID" class="form-control") 
+                  option(value="") هەموو کڕیارەکان
+                  each item,i in customres
+                    option(value=item['_id'])=item['clientName']
+            .row
+              .form-group.col-md-2
+                button.btn.btn-primary.mt-4(type='submit') گەڕان
+
+            //- .row
+            //-     .form-group.col-md-4
+            //-         label ناوی کۆمپانیا
+            //-         input.form-control(name="companyName" type='text')
+            //-     .form-group.col-md-4
+            //-         label بری قەرز
+            //-         input.form-control(name="remainedbalance" type='text')
+            //-     .form-group.col-md-4
+            //-         label جۆری کڕیار
+            //- select(name="clientType" class="form-control") 
+            //-     option(value=profiles['clientType'])=profiles['clientType']
+            //-     each item,i in types
+            //-         option(value=item['customerType'])=item['customerType']

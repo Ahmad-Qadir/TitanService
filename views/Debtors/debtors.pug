@@ -1,0 +1,81 @@
+include ../Components/Header
+block content
+  br
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-left.justify-content-between.mb-4
+      .row 
+        h1.h3.mb-0.text-gray-800.col-md-12=title
+        p.col-md-6(id="totalQard") 
+      .span
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-secondary.shadow-sm.text-white(onclick="printDiv('printableArea')")
+          i.fas.fa-print.fa-sm.text-white-50
+          |  چاپکردن
+      
+
+    .container
+      != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class="note note-danger") #{error.msg}
+    .row
+      .container-fluid.table-responsive(id="printableArea")
+        table(id="clientTable").table.table-hover.table-sm.dt-responsive.table-striped
+          thead.thead-light
+            tr(style="text-align:center; font-size:3 rem")
+              th(scope='col') #
+              th(scope='col') ناو
+              th(scope='col') ژمارەی مۆبایل
+              th(scope='col') ناوی کۆمپانیا
+              th(scope='col') جۆری کڕیار
+              th(scope='col') بڕی قەرز
+              th(scope='col') تۆمارەکان
+          tbody
+            each item,i in profile
+              - var j=i+1
+              tr(style="font-weight:bold; font-size:2 rem")
+                td(style="text-align:center; width:3%")=j
+                td=item['clientName']
+                td(style="text-align:center;")=item['phoneNumber']
+                td(style="text-align:center;")=item['companyName']
+                td(style="text-align:center;")=item['clientType']
+                td(style="text-align:center;" id="totalPP")="$ "+parseFloat(item['remainedbalance']).toFixed(2)
+                td(style="text-align:center;")
+                  a.btn.btn-sm.btn-info.m-1(title="تۆماری قەردەکان" href="/profiles/"+item['_id']+"/Debut/invoices")
+                    span.icon.text-white-50
+                      i.fas.fa-file-invoice
+                  a.btn.btn-sm.btn-secondary.m-1(title="پارەدان" href="/Profiles/Debut/"+item['_id'])
+                      span.icon.text-white-50
+                        i.fas.fa-wallet
+  //- include ../Components/Footer
+  script.
+    $(document).ready(function() {
+      $('#clientTable').DataTable({
+        "pageLength": 100
+      });
+
+      var TotalValue = 0;
+        $("tr #totalPP").each(function(index,value){
+          currentRow = parseFloat($(this).text().replace("$",""));
+          TotalValue += currentRow
+        });
+
+        document.getElementById('totalQard').innerHTML="کۆی قەرزەکان:  "+TotalValue.toFixed(2)
+    } );
+      function printDiv(divName) {
+        var originalContents = document.body.innerHTML;
+        $('table thead tr').find('td:eq(1),th:eq(1)').remove();
+        $('table thead tr').find('td:eq(1),th:eq(1)').remove();
+        $('table thead tr').find('td:eq(2),th:eq(2)').remove();
+        $('table thead tr').find('td:eq(3),th:eq(3)').remove();
+
+        $('table tbody tr').find('td:eq(1),th:eq(1)').remove();
+        $('table tbody tr').find('td:eq(1),th:eq(1)').remove();
+        $('table tbody tr').find('td:eq(2),th:eq(2)').remove();
+        $('table tbody tr').find('td:eq(3),th:eq(3)').remove();
+        //- $('table tbody tr').find('td:eq(4),th:eq(4)').remove();
+        var printContents = document.getElementById(divName).innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+      }

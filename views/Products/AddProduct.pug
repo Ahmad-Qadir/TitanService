@@ -1,0 +1,112 @@
+include ../Components/Header
+block content
+  br
+  .container
+    // Page Heading
+    .d-sm-flex.align-items-left.justify-content-between.mb-4
+    .jumbotron
+      .row
+        .container-fluid.table-responsive
+          form(method='POST' action="/Product")
+            .container
+              != messages('message', locals)
+              if errors
+                each error, i in errors
+                  div(class="alert alert-danger") #{error.msg}
+            h2 زانیاری بەرهەم
+            .row
+              .form-group.col-md-2
+                label ناوی بەرهەم
+                input.form-control(name="itemName" type='text' placeholder='' required)
+              .form-group.col-md-2
+                label بڕاندی بەرهەم
+                input.form-control(name="itemModel" type='text' placeholder='' required)
+              .form-group.col-md-2
+                label کۆمپانیای وەبەرهێن
+                select(name="manufacturerCompany" class="form-control")
+                  each item,i in company
+                    option(value=item['companyName'])=item['companyName']
+              .form-group.col-md-2
+                label وڵات
+                select(name="countryCompany" class="form-control")
+                  option(value="اردن") اردن
+                  option(value="عیراق") عیراق
+                  option(value="توركیا") توركیا
+                  option(value="ایتالیا") ایتالیا
+                  option(value="چین") چین
+                  option(value="ئیران") ئیران
+                  option(value="بریتانیا") بریتانیا
+              .form-group.col-md-2
+                label جۆری بەرهەم
+                select(name="itemType" class="form-control")
+                  option(value="دهنی") دهنی
+                  option(value="مائی") مائی
+                  option(value="مائی و دهنی") مائی و دهنی
+                  option(value="نایترۆ سلیلۆز") نایترۆ سلیلۆز
+              .form-group.col-md-2
+                label ڕەنگ
+                select(name="color" class="form-control")
+                  each item,i in colors
+                    option(value=item)=item
+            .row
+              .form-group.col-md-2
+                label پەکێج
+                select(name="unit" class="form-control")
+                  option(value="کارتۆن") کارتۆن
+                  option(value="دەرزەن") دەرزەن
+                  option(value="مەتر") مەتر
+                  option(value="کیلۆ") کیلۆ
+                  option(value="دانە") دانە
+                  option(value="لیتر") لیتر
+              .form-group.col-md-2
+                label یەکەی پێوانە
+                select(name="itemUnit" class="form-control")
+                  each item,i in itemUnit
+                    option(value=item['unitName'])=item['unitName']
+              .form-group.col-md-2
+                label بڕی پێوانە
+                input.form-control(name="weight" type='number' step='any' required)
+              .form-group.col-md-2
+                label بەرواری بەسەرچوون
+                input.form-control(name="expireDate" type='date')
+              .form-group.col-md-2
+                label بڕی پاکێج
+                input.form-control(name="perPacket" type='number' placeholder='0' required)
+              .form-group.col-md-2
+                label شوێنی بەکارهێنان
+                select(name="usedIn" class="form-control")
+                  option(value="خارجی") خارجی
+                  option(value="داخلی") داخلی
+                  option(value="داخلی و خارجی") داخلی و خارجی
+                  option(value="فلینكۆت") فلینكۆت
+            .row
+              .form-group.col-md-2
+                label نرخی هاتوو
+                input.form-control(name="camePrice" type='number' placeholder='0' required step='any')
+              .form-group.col-md-2
+                label مفرد
+                input.form-control(id="sellPriceMufrad" name="sellPriceMufrad" type='number' placeholder='0' required step='any' onkeyup="myFunction(this)")
+              .form-group.col-md-2
+                label محل
+                input.form-control(id="sellPriceMahal" name="sellPriceMahal" type='number' placeholder='0' required step='any' onkeyup="myNextFunction(this)")
+              .form-group.col-md-2
+                label وەستا
+                input.form-control(id="sellPriceWasta" name="sellPriceWasta" type='number' placeholder='0' required step='any')
+              .form-group.col-md-2
+                label وەکیل
+                input.form-control(id="sellPriceWakil" name="sellPriceWakil" type='number' placeholder='0' required step='any')
+              .form-group.col-md-2
+                label شركه‌
+                input.form-control(id="sellPriceSharika" name="sellPriceSharika" type='number' placeholder='0' required step='any')
+
+            button.btn.btn-primary.mt-2(type='submit') تۆمارکردن
+    script.
+      function myFunction(input){
+        var elementValue = input.value;
+        document.getElementById("sellPriceWasta").value = parseFloat(elementValue);
+      }
+      function myNextFunction(input){
+        var elementValue = input.value;
+        document.getElementById("sellPriceSharika").value = parseFloat(elementValue);
+        document.getElementById("sellPriceWakil").value = parseFloat(elementValue);
+      }

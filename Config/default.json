@@ -1,0 +1,5 @@
+{
+    "db":"mongodb+srv://Accounting:Accounting@cluster0.01y3l1c.mongodb.net/?retryWrites=true&w=majority",
+    "privateKey": "TitanService_jwtPrivateKey",
+    "Default-Address":"http://localhost:3000"
+}

@@ -1,0 +1,181 @@
+include ../Components/Header
+block content
+    br
+    .container-fluid
+        // Page Heading
+        .d-sm-flex.align-items-left.justify-content-between.mb-4
+            .row 
+                h1.h3.mb-0.text-gray-800.col-md-12=title
+            .span
+                a.d-none.d-sm-inline-block.btn.btn-sm.btn-secondary.shadow-sm.text-white.disabled(onclick="printDiv('printableArea')")
+                    i.fas.fa-print.fa-sm.text-white-50
+                    |  چاپکردن
+        .container-fluid.table-responsive(id="printableArea"+i)
+            table(id="clientTable").table.table-hover.table-sm.dt-responsive.table-striped.table-bordered
+                thead(style="font-size: 12px;font-weight:bold;text-align:center; background-color: #3f87a6;color: #fff;" )
+                    tr(style="text-align:center; font-size:3 rem")
+                        th(scope='col') #
+                        th(scope='col') کۆمپانیای وەبەرهێن
+                        th(scope='col') بڕاندی بەرهەم
+                        th(scope='col') ناوی بەرهەم
+                        th(scope='col') وڵات
+                        th(scope='col') پێوانەی گشتی
+                        th(scope='col') جۆری بەرهەم
+                        th(scope='col') شوێنی بەکارهێنان
+                        th(scope='col') بڕی پێوانە
+                        th(scope='col') ڕەنگ
+                        th(scope='col') نرخی هاتوو (پێش تێچوو)
+                        th(scope='col') بڕی بەردەست
+                        th(scope='col') نرخی گشتی
+
+                tbody(id="count-it")
+                    each item,k in product
+                        //- - var j=i+1
+                        if item['totalQuantity']<=10 && item['totalQuantity']>0
+                            tr(style="font-weight:bold; font-size:2 rem").bg-warning
+                                td(style="text-align:center;")=k
+                                //- if item['itemModel']==undefined 
+                                    td(style="text-align:center;")
+                                //- else
+                                td(style="text-align:center;")=item['manufacturerCompany']
+                                td(style="text-align:center;")=item['itemModel']
+                                td(style="text-align:center;")=(item['itemName'])
+                                td(style="text-align:center;")=item['countryCompany']
+                                td(style="text-align:center;")=item['unit']
+                                td(style="text-align:center;")=item['itemType']
+                                td(style="text-align:center;")=item['usedIn']
+                                td(style="text-align:center;")=item['weight']+ " "+item['itemUnit']
+                                td(style="text-align:center;")=item['color']
+                                td(style="text-align:center;")="$ " +item['camePrice']
+                                td(style="text-align:center;")=item['totalQuantity']
+                                td(style="text-align:center;").count-me=(item['totalQuantity']*item['camePrice']).toFixed(2)
+                        else if item['totalQuantity']==0
+                            tr(style="font-weight:bold; font-size:2 rem").bg-danger
+                                td(style="text-align:center;")=k
+                                //- if item['itemModel']==undefined 
+                                    td(style="text-align:center;")
+                                //- else
+                                td(style="text-align:center;")=item['manufacturerCompany']
+                                td(style="text-align:center;")=item['itemModel']
+                                td(style="text-align:center;")=(item['itemName'])
+                                td(style="text-align:center;")=item['countryCompany']
+                                td(style="text-align:center;")=item['unit']
+                                td(style="text-align:center;")=item['itemType']
+                                td(style="text-align:center;")=item['usedIn']
+                                td(style="text-align:center;")=item['weight']
+                                td(style="text-align:center;")=item['color']
+                                td(style="text-align:center;")="$ " +item['camePrice']
+                                td(style="text-align:center;")=item['totalQuantity']
+                                td(style="text-align:center;").count-me=(item['totalQuantity']*item['camePrice']).toFixed(2)
+                        else 
+                            tr(style="font-weight:bold; font-size:2 rem")
+                                td(style="text-align:center;")=k
+                                //- if item['itemModel']==undefined 
+                                    td(style="text-align:center;")
+                                //- else
+                                td(style="text-align:center;")=item['manufacturerCompany']
+                                td(style="text-align:center;")=item['itemModel']
+                                td(style="text-align:center;")=(item['itemName'])
+                                td(style="text-align:center;")=item['countryCompany']
+                                td(style="text-align:center;")=item['unit']
+                                td(style="text-align:center;")=item['itemType']
+                                td(style="text-align:center;")=item['usedIn']
+                                td(style="text-align:center;")=item['weight']
+                                td(style="text-align:center;")=item['color']
+                                td(style="text-align:center;")="$ " +item['camePrice']
+                                td(style="text-align:center;")=item['totalQuantity']
+                                td(style="text-align:center;").count-me=(item['totalQuantity']*item['camePrice']).toFixed(2)
+                tfoot 
+                    tr(style="line-height: 10px;")
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold" colspan=2).bg-dark.text-light
+                            strong کۆی گشتی (دۆلار)
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.left(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.right(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.right(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.right(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                        td.right(style="text-align:center; font-size:3 rem;font-weight:bold").bg-dark.text-light
+                            strong(id="finalPrice") 
+        //- each company,i in product
+        //-     #accordionExample.accordion
+        //-         .accordion-item
+        //-             h2(id="heading"+i).accordion-header
+        //-                 .row
+        //-                     button.accordion-button(type='button' data-mdb-toggle='collapse' data-mdb-target='#collapse'+i aria-expanded='true' aria-controls='collapse'+i)
+        //-                         .col-md-2="کۆمپانیای "+company['_id']['manufacturerCompany']
+        //-                         .col-md-2="کۆی بەرهەم: "+company['count']
+        //-                         .col-md-4
+        //-                         .col-md-3 
+        //-                             a.btn.btn-sm.btn-secondary.m-2( title="چاپکردنی تۆمار" style="padding: .25rem .4rem;font-size: .875rem;line-height: .5;border-radius: .2rem;" onclick=`printDiv('printableArea'+${i})`)
+        //-                                 span.icon.text-white-50
+        //-                                     i.fas.fa-print
+        //-                         //- .col-md-2="تێچووی تۆمار: "+item['amount'].toFixed(2)
+        //-     .accordion-collapse.collapse.hide(aria-labelledby="heading"+i data-mdb-parent='#accordionExample' id="collapse"+i)
+        //-         .accordion-body
+        //-             .container-fluid.table-responsive(id="printableArea"+i)
+        //-                 table(id="clientTable").table.table-hover.table-sm.dt-responsive.table-striped
+        //-                     thead.thead-light
+        //-                         tr(style="text-align:center; font-size:3 rem")
+        //-                             th(scope='col') #
+        //-                             th(scope='col') بڕاندی بەرهەم
+        //-                             th(scope='col') ناوی بەرهەم
+        //-                             th(scope='col') وڵات
+        //-                             th(scope='col') کۆمپانیای وەبەرهێن
+        //-                             th(scope='col') پێوانەی گشتی
+        //-                             th(scope='col') پێوانەی تاک
+        //-                             th(scope='col') جۆری بەرهەم
+        //-                             th(scope='col') شوێنی بەکارهێنان
+        //-                             th(scope='col') بڕی پێوانە
+        //-                             th(scope='col') ڕەنگ
+        //-                             th(scope='col') بڕی بەردەست
+        //-                     tbody
+        //-                         each item,k in company['items']
+        //-                             - var j=i+1
+        //-                             tr(style="font-weight:bold; font-size:2 rem")
+        //-                                 td(style="text-align:center;")=k
+        //-                                 td(style="text-align:center;")=item['itemModel']
+        //-                                 td(style="text-align:center;")=item['itemName']
+        //-                                 td(style="text-align:center;")=item['countryCompany']
+        //-                                 td(style="text-align:center;")=item['manufacturerCompany']
+        //-                                 td(style="text-align:center;")=item['unit']
+        //-                                 td(style="text-align:center;")=item['itemUnit']
+        //-                                 td(style="text-align:center;")=item['itemType']
+        //-                                 td(style="text-align:center;")=item['usedIn']
+        //-                                 td(style="text-align:center;")=item['weight']
+        //-                                 td(style="text-align:center;")=item['color']
+        //-                                 td(style="text-align:center;")=item['totalQuantity']
+
+    //- include ../Components/Footer
+    script.
+        function printDiv(divName) {
+            var originalContents = document.body.innerHTML;
+            //- $('table thead tr').find('td:eq(1),th:eq(1)').remove();
+            //- $('table thead tr').find('td:eq(2),th:eq(2)').remove();
+            //- $('table thead tr').find('td:eq(3),th:eq(3)').remove();
+
+            //- $('table tbody tr').find('td:eq(1),th:eq(1)').remove();
+            //- $('table tbody tr').find('td:eq(1),th:eq(1)').remove();
+            //- $('table tbody tr').find('td:eq(2),th:eq(2)').remove();
+            //- $('table tbody tr').find('td:eq(3),th:eq(3)').remove();
+            //- $('table tbody tr').find('td:eq(4),th:eq(4)').remove();
+            var printContents = document.getElementById(divName).innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+        $( document ).ready(function() {
+            var tds = document.getElementById('count-it').getElementsByTagName('td');
+            var sum = 0;
+                console.log(tds.length)
+            for(var i = 0; i < tds.length; i ++) {
+                if(tds[i].className == 'count-me') {
+                    sum += isNaN(tds[i].innerHTML.replace("$","")) ? 0 : parseFloat(tds[i].innerHTML.replace("$",""));
+                }
+            }
+            document.getElementById('finalPrice').innerHTML += sum.toFixed(2)
+        });

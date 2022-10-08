@@ -1,0 +1,122 @@
+include ../Components/Header
+block content
+    br
+    .container
+        // Page Heading
+        .d-sm-flex.align-items-left.justify-content-between.mb-4
+            h1.h3.mb-0.text-gray-800=title
+            .span
+                a.d-none.d-sm-inline-block.btn.btn-sm.btn-secondary.shadow-sm.text-white.m-1(type='button' data-toggle='modal' onclick="printDiv('printableArea')")
+                    i.fas.fa-print.fa-sm.text-white-50
+                    |  چاپکردن
+        .jumbotron
+            .row(id="printableArea")
+                each invoice,h in invoices
+                    .container-fluid
+                        .card.border(style="border: 5px solid #1794BA !important;" class="h-100")
+                            //- .card-header(style='background-color: black;')
+                            .card-body(id="targetedArea" style="background: url('https://i.ibb.co/HhnspzY/Invoice-UI.jpg'); background-size: 100% 280mm;")
+                                .p-4
+                                    .container
+                                        .row.col-12
+                                            .col-6
+                                                h2
+                                                    strong تیتان سێرڤس
+                                                br
+                                                h6="ژمارەی تۆمار: "+invoice['_id']['recordCode']
+                                                h6="بۆ:"+profile['companyName']+" /کاک  "+profile['clientName']
+                                                h6="ژمارەی مۆبایل: "+profile['phoneNumber']
+                                                h6="بەروار:"+invoice['items'][0]['createdAt'].toLocaleString("en-GB")
+                                                h6="لەلایان:"+invoice['items'][0]['addedBy']
+                                                h6="ژمارەی مۆبایل ی کۆمپانیا:07504153878"
+                                            .col-6
+                                                img#icon(src='https://i.ibb.co/9GPnfN5/titan-removebg-preview.png' width=300).mx-auto.d-block
+                                hr
+                                div
+                                    table(id="invoiceTable").table-bordered.table-xs.table-responsive.col-12
+                                        thead(style="font-size: 12px;font-weight:bold;text-align:center; background-color: #3f87a6;color: #fff;" )
+                                            tr
+                                                th(style="font-weight:bold;") ناوی بەرهەم
+                                                th(style="" colspan=2) جۆری بەرهەم
+                                                th(style="") ڕەنگ
+                                                th(style="width:7%") پێوانە
+                                                th(style="width:3%") ژمارە
+                                                th(style="width:10%").right نرخی تاک
+                                                th(style="").right کۆی گشتی
+                                                //- th(style="text-align:center; font-size:100%;font-weight:bold; width:3%")
+                                        tbody(id="dataOfInvoiceTable" style="font-size: 12px;font-weight:bold;text-align:center;")
+                                            - var j=h+1;
+                                                if invoice['data'].length==0
+                                                    tr 
+                                                        td پارەدان
+                                                        td(style="text-align:center;") -
+                                                        td(style="text-align:center;") -
+                                                        td(style="text-align:center;") -
+                                                        td(style=`text-align:center;`) -
+                                                        td(style="text-align:center;") -
+                                                        td(style="text-align:center;")="$ "+invoice['items'][0]['sellPrice']
+                                                        td.count-me(style="text-align:center;")="$ "+invoice['items'][0]['totalPrice']
+                                                else
+                                                    each product,x in invoice['data']
+                                                        each product,k in invoice['data']
+                                                            if invoice['items'][x]['productID'].equals(product['_id'])
+                                                                tr
+                                                                    td=product['itemModel']
+                                                                    td(style="text-align:center;")=product['itemName']
+                                                                    td(style="text-align:center;")=product['itemType']
+                                                                    td(style="text-align:center;")=product['color']
+                                                                    td(style=`text-align:center;`)=product['itemUnit']
+                                                                    td(style="text-align:center;")=invoice['items'][x]['totalQuantity']
+                                                                    td(style="text-align:center;")="$ "+invoice['items'][x]['sellPrice']
+                                                                    td.count-me(style="text-align:center;")="$ "+invoice['items'][x]['totalPrice']
+                                if invoice['data'].length==0
+                                    .row
+                                        .col-5.ml-auto
+                                            br
+                                            table.table.table-bordered.table-xs(id="totalPayment")
+                                                tbody
+                                                    //- tr(style="line-height: 10px;")
+                                                    //-   td.left
+                                                    //-     strong(style="color:#f00") قەرزی پێشوو
+                                                    //-   td(id="olddebut" style="color:#f00").right="$"+records[0]['oldDebut']
+                                                    //- tr(style="line-height: 10px;")
+                                                    //-   td.left
+                                                    //-     strong قەرزی ئێستا
+                                                    //-   td.right(id="total") 0
+                                                    tr(style="line-height: 10px;")
+                                                        td.left
+                                                            strong کۆی گشتی (دۆلار)
+                                                        td.right
+                                                            strong(id="finalPrice")="$"+(invoice['items'][0]['totalPrice'].toFixed(2))
+                                else 
+                                    .row
+                                        .col-5.ml-auto
+                                            br
+                                            table.table.table-bordered.table-xs(id="totalPayment")
+                                                tbody
+                                                    tr(style="line-height: 10px;")
+                                                        td.left
+                                                            strong(style="color:#f00") قەرزی پێشوو
+                                                        td(id="olddebut" style="color:#f00").right="$"+parseFloat(invoice['items'][0]['oldDebut']-invoice['items'][0]['totalPrice']).toFixed(2)
+                                                    tr(style="line-height: 10px;")
+                                                        td.left
+                                                            strong قەرزی ئێستا
+                                                        td.right(id="total")="$"+invoice['amount'].toFixed(2)
+                                                    tr(style="line-height: 10px;")
+                                                        td.left
+                                                            strong کۆی گشتی (دۆلار)
+                                                        td.right
+                                                            strong(id="finalPrice")="$"+(invoice['items'][0]['oldDebut']).toFixed(2)
+
+                            script.
+                                //Print Section
+                                function printDiv(divName) {
+                                var originalContents = document.body.innerHTML;
+                                //- 
+                                document.getElementById("targetedArea").setAttribute("style", "background: url('https://i.ibb.co/HhnspzY/Invoice-UI.jpg'); background-size: 200mm 276mm;");
+                                //- document.getElementById('targetedArea')
+                                var printContents = document.getElementById(divName).innerHTML;
+                                document.body.innerHTML = printContents;
+                                window.print();
+                                document.body.innerHTML = originalContents;
+                                }

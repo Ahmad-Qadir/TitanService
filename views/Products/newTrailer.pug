@@ -1,0 +1,467 @@
+include ../Components/Header
+append styles
+  style.
+    .dropbtn {
+      background-color: #04AA6D;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    .dropbtn:hover, .dropbtn:focus {
+      background-color: #3e8e41;
+    }
+    #myInput {
+      box-sizing: border-box;
+      background-image: url('searchicon.png');
+      background-position: 14px 12px;
+      background-repeat: no-repeat;
+      font-size: 16px;
+      padding: 14px 20px 12px 45px;
+      border: none;
+      border-bottom: 1px solid #ddd;
+    }
+    #myInput:focus {outline: 3px solid #ddd;}
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f6f6f6;
+      min-width: 230px;
+      overflow: auto;
+      border: 1px solid #ddd;
+      z-index: 1;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown a:hover {background-color: #ddd;}
+    .show {display: block;}
+block content
+  br
+  .container
+    // Page Heading
+    .d-sm-flex.align-items-left.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800=title
+      .span
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-success.shadow-sm.text-white.m-1(type='button' onclick="payNow()" )
+          i.fas.fa-truck-moving.fa-sm.text-white-50
+          |  زیاد کردنی بارهەڵگر
+        //- a.d-none.d-sm-inline-block.btn.btn-sm.btn-primary.shadow-sm.text-white.m-1(type='button' data-toggle="modal" data-target="#confirm-payment")
+        //-   i.fas.fa-wallet.fa-sm.text-white-50
+        //-   |  دانەوەی پارە
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-danger.shadow-sm.text-white.m-1(type='button' onclick="showDatas()")
+          i.fas.fa-truck-moving.fa-sm.text-white-50
+          |  زیادکردنی بارهەڵگر (قەرد)
+        a.d-none.d-sm-inline-block.btn.btn-sm.btn-warning.shadow-sm.text-white.m-1(type='button' onclick='rearrangement()')
+          i.fas.fa-reset.fa-sm.text-white-50
+          |  ڕێکخستنەوەی بارهەڵگر
+    .container(id="newRecord")
+    .jumbotron
+      .row
+        table.table.table-striped
+          thead.thead-dark
+            .container(id="result")
+          tbody
+            .row
+              .form-group.col-md-2
+                label ناوی کۆمپانیا
+                input(name="companyName" class="form-control fstdropdown-select custom-selection" id="companyName" onclick='myFunction()' onkeyup='filterFunction()')
+                .dropdown
+                  #myDropdown.dropdown-content
+                    each item,i in company
+                      a(href="#" onclick="getModel(this,event);" title=item type='button' data-toggle="modal" data-target="#confirm-product"+i)=item
+              .form-group.col-md-3
+                label نرخی تێچووی بارهەڵگر
+                input(type="text" name="PriceOfExpense" class="form-control fstdropdown-select" id="PriceOfExpense")
+              .form-group.col-md-1.invisible(id="showme2")
+                label کۆی گشتی
+                input.form-control(id="koywasl" name="koywasl" type='number' placeholder='0' required step='any')
+              .form-group.col-md-1.invisible(id="showme3")
+                label بڕی دراو
+                input.form-control(id="koydraw" name="koydraw" type='number' placeholder='0' required step='any')
+              .form-group.col-md-1.invisible(id="showme4")
+                a.btn.btn-primary.mt-4(onclick="paradaniGshty()") تۆماربکە
+
+        .container(id="printableArea")
+          .card.border.border-dark
+            .card-header.justify-content-between
+              .row
+                strong.col-md-10="ژمارەی تۆمار: "+invoiceID
+                span.col-md-2
+                  strong بارهەڵگری نوێ
+            .card-body
+              //- .row.mb-4
+              //-   .col-sm-6
+              //-     h6.mb-3 بۆ:
+              //-     div
+              //-       strong="Titan Service - " + user.username
+              //-     //- div Attn: Daniel Marek
+              //-     div=Date().toLocaleString("en-GB")
+              //-     //- div Email: robert@daniel.com
+              //-     div Phone: +964 750 000 00 00
+              table.table-bordered.table-xs.table-responsive.col-12(id="invoiceTable")
+                thead(style="font-size: 12px;font-weight:bold;text-align:center; background-color: #3f87a6;color: #fff;" )
+                  tr
+                    th.center #
+                    th بڕاندی بەرهەم
+                    th ناوی بەرهەم
+                    th ڕەنگ
+                    th جۆری بەرهەم
+                    th پێوانە
+                    th وەکیل
+                    th شرکە
+                    th محل
+                    th مفرد
+                    th وەستا
+                    th ژمارە
+                    th نرخی کڕین
+                    th نرخی کۆمپانیا
+                    th.right کۆی نرخ
+                tbody(id="dataOfInvoiceTable" style="font-size: 12px;font-weight:bold;text-align:center;")
+              .row
+                .col-lg-8.col-sm-8
+                  //- b تێبینی
+                  //- textarea.form-control.rounded-0(rows='5' cols='80' id='note')
+                .col-lg-4.col-sm-4.ml-auto
+                  table.table.table-clear(id="totalPayment")
+                    tbody
+                      tr
+                        td.left
+                          strong کۆی گشتی نرخ (بێ تێچوو)
+                        td.right
+                          strong(id="total") 0
+                      //- tr
+                      //-   td.left
+                      //-     strong کۆی گشتی
+                      //-   td.right
+                      //-     strong(id="final") 0
+                      // Modal
+          .modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalCenterTitle' aria-hidden='true' id='confirm-payment')
+            .modal-dialog.modal-dialog-centered.modal-s(role='document')
+              .modal-content
+                .modal-header دواخستنی پارەدان
+                .modal-body 
+                  p بڕی پارەی دراو
+                    input.form-control(name="debut" type='number' step='any' value='0' id="paidmoney")
+                .modal-footer
+                  button.btn.btn-default(type='button' data-dismiss='modal') گەڕانەوە
+                  a.btn.btn-success.btn-ok(onclick="payNowDebut()" data-dismiss='modal') رازیبوون
+      each item,i in company
+        //- if element['manufacturerCompany']==item['companyName']
+        .modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalCenterTitle' aria-hidden='true' id='confirm-product'+i)
+          .modal-dialog.modal-dialog-centered.modal-fullscreen(role='document')
+            .modal-content
+              .modal-header=item['companyName']
+                //- .col-md-2 
+                //-   input.form-control(type='text' id="nawibarham"+i placeholder='ناوی بەرهەم')
+                //-   //- input#hid_search(type='hidden')
+                //- .col-md-2
+                //-   input.form-control(type='text' id="shewayBarham"+i placeholder='ڕەنگی بەرهەم')
+                //-   //- input#button(type='button' onmousedown="doSearch(document.getElementById('search').value)" value='Find')
+                //- .col-md-2
+                //-   input.form-control(type='text' id="search"+i placeholder='بڕاندی بەرهەم')
+
+              thead.thead-dark
+                .container(id="result")
+              .modal-body(id='body-product'+i)
+              .modal-footer
+                button.btn.btn-default(type='button' data-dismiss='modal') گەڕانەوە
+                a.btn.btn-success.btn-ok(onclick="resultOfValidation(this)" data-dismiss='modal') زیادکردنی بەرهەم
+  script.
+    // The code to open the dropdown 
+    function myFunction() {
+      document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.custom-selection')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    // Auto Find Datas in Input Form
+    function filterFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("companyName");
+      filter = input.value.toUpperCase();
+      div = document.getElementById("myDropdown");
+      a = div.getElementsByTagName("a");
+      for (i = 0; i < a.length; i++) {
+        txtValue = a[i].textContent || a[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          a[i].style.display = "";
+        } else {
+          a[i].style.display = "none";
+        }
+      }
+    }
+
+    // Get Model Table
+    function getModel(val, event) {
+      var model=$(val).attr('data-target');
+      var idOfModel= model.match(/\d+/)[0]
+      event.preventDefault();
+      var data=$.ajax({
+        type: 'GET',
+        url: "/Products/Model/Company/"+val.title,
+        dataType: 'JSON',
+        success: function(data){
+          $('#body-product'+idOfModel).empty()
+          $('#body-product'+idOfModel).append($("<table></table>").attr("id","datas"+idOfModel).attr('class',"table table-hover table-lg table-striped container-fluid table-responsive"));
+          $('#datas'+idOfModel).append($("<thead></thead>").attr('id','MainHeader'+idOfModel));
+          $('#MainHeader'+idOfModel).append($("<tr></tr>").attr('style',"text-align:center").attr('id','header'+idOfModel));
+          $('#header'+idOfModel).append($("<th></th>").text('#'));
+          $('#header'+idOfModel).append($("<th></th>").text('بڕاندی بەرهەم'));
+          $('#header'+idOfModel).append($("<th></th>").text('ناوی بەرهەم'));
+          $('#header'+idOfModel).append($("<th></th>").text('ڕەنگ'));
+          $('#header'+idOfModel).append($("<th></th>").text('جۆری بەرهەم'));
+          $('#header'+idOfModel).append($("<th></th>").text('پێوانە'));
+          $('#header'+idOfModel).append($("<th></th>").text('وەکیل'));
+          $('#header'+idOfModel).append($("<th></th>").text('شرکە'));
+          $('#header'+idOfModel).append($("<th></th>").text('محل'));
+          $('#header'+idOfModel).append($("<th></th>").text('مفرد'));
+          $('#header'+idOfModel).append($("<th></th>").text('وەستا'));
+          $('#header'+idOfModel).append($("<th></th>").text('ژمارە'));
+          $('#header'+idOfModel).append($("<th></th>").text('نرخی کڕین'));
+          $('#datas'+idOfModel).append($("<tbody></tbody>").attr('id','MainBody'+idOfModel));
+          //- 
+          for (let i = 0; i < data.length; i++) {
+            $('#MainBody'+idOfModel).append($("<tr></tr>").attr("id","rows"+idOfModel+i));
+            $('#rows'+idOfModel+i).append($("<td></td>").attr('id','check'+idOfModel+i));
+            $('#check'+idOfModel+i).append($("<input></input>").attr('id','checkstatus'+idOfModel+i).attr('type','checkbox').attr('value',data[i]['itemName']).attr('style','zoom: 1.5;'));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['itemModel']));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['itemName']));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['color']));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['itemType']));
+            if(parseFloat(data[i]['weight'])>2.9 && parseFloat(data[i]['weight'])<5)
+              $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['weight']+" "+data[i]['itemUnit']).attr('id',"unit"+idOfModel+i).attr('style',"background-color:#661E18;color:#FFFFFF"));
+            else if(parseFloat(data[i]['weight'])>6.9 && parseFloat(data[i]['weight'])<10)
+              $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['weight']+" "+data[i]['itemUnit']).attr('id',"unit"+idOfModel+i).attr('style',"background-color:#186628;color:#FFFFFF"));
+            else if(parseFloat(data[i]['weight'])>=15)
+              $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['weight']+" "+data[i]['itemUnit']).attr('id',"unit"+idOfModel+i).attr('style',"background-color:#182966;color:#FFFFFF"));
+            else
+              $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['weight']+" "+data[i]['itemUnit']).attr('id',"unit"+idOfModel+i));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['sellPriceWakil']));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['sellPriceSharika']));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['sellPriceMahal']));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['sellPriceMufrad']));
+            $('#rows'+idOfModel+i).append($("<td></td>").text(data[i]['sellPriceWasta']));
+            $('#rows'+idOfModel+i).append($("<td></td>").attr('id','quantity'+idOfModel+i));
+            $('#quantity'+idOfModel+i).append($("<input></input>").attr('type','number').attr('step','any').attr('name','totalQuan').attr('placeholder','0').attr('class','form-control').attr('id','totalQuan'+idOfModel+i));
+            $('#rows'+idOfModel+i).append($("<td></td>").attr('id','priceRow'+idOfModel+i));
+            $('#priceRow'+idOfModel+i).append($("<input></input>").attr('type','number').attr('step','any').attr('name','priceOf').attr('id','priceOf'+idOfModel+i).attr('class','form-control').attr('value',data[i]['camePrice']));
+            }
+
+            $('#datas'+idOfModel).DataTable({
+              "paging": false
+            });
+          }
+      })
+    }
+
+    //Section of Adding Selected items in Table
+    function resultOfValidation(val){
+      var table=val.parentNode.parentNode.childNodes[2].childNodes[0].childNodes[1].childNodes[1].childNodes;
+      for (let i = 0; i < table.length; i++) {
+        if(document.getElementById(table[i].childNodes[0].firstChild.id).checked==true){
+          $("#invoiceTable").find('tbody')
+            .append($('<tr>')
+              .append($('<td>')
+                .text($('#invoiceTable>tbody>tr').length+1).attr('class','delete')
+              ).append($('<td>')
+                .text(table[i].childNodes[1].innerHTML) //Item Model
+              ).append($('<td>')
+                .text(table[i].childNodes[2].innerHTML) //Item Name
+              ).append($('<td>')
+                .text(table[i].childNodes[3].innerHTML) //Item Color
+              ).append($('<td>')
+                .text(table[i].childNodes[4].innerHTML)
+              ).append($('<td>')
+                .text(table[i].childNodes[5].innerHTML)
+              ).append($('<td>')
+                .text(table[i].childNodes[6].innerHTML).attr("contenteditable",'true')
+              ).append($('<td>')
+                .text(table[i].childNodes[7].innerHTML).attr("contenteditable",'true')
+              ).append($('<td>')
+                .text(table[i].childNodes[8].innerHTML).attr("contenteditable",'true')
+              ).append($('<td>')
+                .text(table[i].childNodes[9].innerHTML).attr("contenteditable",'true')
+              ).append($('<td>')
+                .text(table[i].childNodes[10].innerHTML).attr("contenteditable",'true')
+              ).append($('<td>')
+                .text(table[i].childNodes[11].firstChild.value).attr("contenteditable",'true')
+              ).append($('<td>')
+                .text(table[i].childNodes[12].firstChild.value).attr("contenteditable",'true')
+              ).append($("<td>")
+                .text(" ")
+              ).append($('<td>')
+                .text(parseFloat(table[i].childNodes[11].firstChild.value)*parseFloat(table[i].childNodes[12].firstChild.value)).attr('id',"loop")
+              )
+            );
+              document.getElementById('total').innerHTML=parseFloat(document.getElementById('total').innerHTML)+parseFloat(table[i].childNodes[11].firstChild.value)*parseFloat(table[i].childNodes[12].firstChild.value)
+        }
+        else{
+          continue;
+        }
+      }
+    }
+
+    function showDatas(val, event) {
+
+      document.getElementById('showme2').classList.remove('invisible')
+      document.getElementById('showme2').classList.add('visible')
+      document.getElementById('showme3').classList.remove('invisible')
+      document.getElementById('showme3').classList.add('visible')
+      document.getElementById('showme4').classList.remove('invisible')
+      document.getElementById('showme4').classList.add('visible')
+      document.getElementById('koywasl').value=document.getElementById('total').innerHTML.replace("$","")
+    }
+
+
+
+
+    function payNow(){
+      objectData=document.getElementById("invoiceTable")
+      var cost=document.getElementById("PriceOfExpense").value
+      //Send to Database
+        var data= $.ajax({
+          type: 'POST',
+          url: "/Products/NewTrailer/"+cost,
+          dataType: 'JSON',
+          data:getJSON(objectData),
+          success: function(data){
+            $('#newRecord').append($("<div></div>").attr("class","note note-success mt-2").text("باری نوێ بە سەرکەوتوویی زیاد کرا"));
+          },
+          error: function(err){
+            $('#newRecord').append($("<div></div>").attr("class","note note-success mt-2").text("باری نوێ بە سەرکەوتوویی زیاد کرا"));
+          }
+      })
+    }
+
+    // Parse HTML table element to JSON array of objects
+    function getJSON(table) {  
+      // thead
+      const thead = Array.from(table.tHead.rows[0].children).map((el) => el.textContent);
+
+      // tbody
+      const tbody = Array.from(table.tBodies[0].rows).map((row) =>
+        Array.from(row.cells).map((cell) => cell.textContent)
+      );
+
+      return {
+        tbody
+      };
+    }
+
+    function printDiv(divName) {
+      var printContents = document.getElementById(divName).innerHTML;
+      var originalContents = document.body.innerHTML;
+
+      document.body.innerHTML = printContents;
+
+      window.print();
+
+      document.body.innerHTML = originalContents;
+    }
+
+
+
+    function rearrangement(){
+      var expense=parseFloat(document.getElementById('PriceOfExpense').value); //Expense Price
+      var total=parseFloat(document.getElementById('total').innerHTML); //Total Price
+      var objectData=document.getElementById("invoiceTable");
+      var TotalValue = 0;
+      if(isNaN(expense)){
+        document.getElementById("PriceOfExpense").classList.add("btn-outline-danger")
+        $('#newRecord').append($("<div></div>").attr("class","note note-danger mt-2").text("تکایە تێچووی بارهەڵگر پڕبکەوە"));
+      }else{
+        var table=objectData.tBodies[0].rows;
+        for(var i=0;i<objectData.tBodies[0].rows.length;i++){
+          //- console.log(table[i].cells[0].textContent)
+          //- console.log(table[i].cells[1].textContent)
+          //- console.log(table[i].cells[2].textContent)
+          //- console.log(table[i].cells[3].textContent)
+          //- console.log(table[i].cells[4].textContent)
+          //- console.log(table[i].cells[5].textContent)
+          //- console.log(table[i].cells[6].textContent)
+          //- console.log(table[i].cells[7].textContent)
+          //- console.log(table[i].cells[8].textContent)
+          //- console.log(table[i].cells[9].textContent)  //SellPriceMufrad
+          //- console.log(table[i].cells[10].textContent)
+          //- console.log(table[i].cells[11].textContent)
+          //- console.log(table[i].cells[12].textContent) //Came Price
+          if(expense>1)
+            table[i].cells[13].textContent=((expense/total)*parseFloat(table[i].cells[9].textContent)+parseFloat(table[i].cells[12].textContent)).toFixed(2) //Company Price
+          else
+            table[i].cells[13].textContent=table[i].cells[12].textContent
+          //- console.log(table[i].cells[14].textContent)
+
+        }
+      }
+        //- $("tr #loop").each(function(index,value){
+        //-   currentRow = parseFloat($(this).text());
+        //-   TotalValue += currentRow
+        //- });
+        //- document.getElementById('final').innerHTML = TotalValue;
+
+    }
+
+    function paradaniGshty(val, event) {
+      objectData=document.getElementById("invoiceTable")
+      //- var note = document.getElementById("note").value;
+      //- var personName = document.getElementById("personName").value;
+      var total = document.getElementById("koywasl").value;
+      var pay = document.getElementById("koydraw").value;
+      var cost=document.getElementById("PriceOfExpense").value
+
+      //- var result=Object.values(getJSON(objectData))
+      //- result.push([note])
+      //- result.push([personName])
+      //- console.log(getJSON(objectData))
+      //Send to Database
+        var data= $.ajax({
+          type: 'POST',
+          url: "/Trailers/NewTrailer/Debut/"+total+"/"+pay+"/"+cost,
+          dataType: 'JSON',
+          data:getJSON(objectData),
+          success: function(data){
+            $('#newRecord').append($("<div></div>").attr("class","note note-success mt-2").text("باری نوێ بە سەرکەوتوویی زیاد کرا"));
+          },
+          error: function(err){
+            $('#newRecord').append($("<div></div>").attr("class","note note-success mt-2").text("باری نوێ بە سەرکەوتوویی زیاد کرا"));
+          }
+      })
+    }
+
+    $(document).ready(function(){
+      $(document).on("click", ".delete", function(){
+        $(this).parents("tr").remove();
+        //- console.log(this.parentNode.childNodes[14].innerHTML.replace("$", ''))
+        document.getElementById('total').innerHTML=parseFloat(document.getElementById('total').innerHTML.replace("$", ''))-parseFloat(this.parentNode.childNodes[14].innerHTML.replace("$", ''))
+        });
+
+    $(document).on("click", "table tbody tr td", function(e) {
+      var data = $(this).attr('id');
+      if(data.includes("quantity")){
+      //- alert (data.match(/\d+/)[0]);
+      //- var data = $(this).attr('id').match(/\d+/)[0];
+        document.getElementById("checkstatus"+data.match(/\d+/)[0]).checked = true;
+      }
+        }); 
+        });
