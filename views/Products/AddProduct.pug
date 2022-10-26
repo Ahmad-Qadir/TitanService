@@ -46,8 +46,91 @@ block content
               .form-group.col-md-2
                 label ڕەنگ
                 select(name="color" class="form-control")
-                  each item,i in colors
-                    option(value=item)=item
+                  option(value='')
+                  option(value=' سپی')  سپی
+                  option(value='.MV]') .MV]
+                  option(value='1001') 1001
+                  option(value='1008') 1008
+                  option(value='1037') 1037
+                  option(value='1042') 1042
+                  option(value='5002') 5002
+                  option(value='6002') 6002
+                  option(value='9002') 9002
+                  option(value='ئه‌له‌منیۆم') ئه‌له‌منیۆم
+                  option(value='ابيض') ابيض
+                  option(value='ابیض') ابیض
+                  option(value='احمر') احمر
+                  option(value='اخضر') اخضر
+                  option(value='اخضر حشيشي') اخضر حشيشي
+                  option(value='اخضر غامق') اخضر غامق
+                  option(value='ازرق') ازرق
+                  option(value='اسود') اسود
+                  option(value='اصفر') اصفر
+                  option(value='اصفر كرومی') اصفر كرومی
+                  option(value='اصفر لیمونی') اصفر لیمونی
+                  option(value='الوان') الوان
+                  option(value='اوف وایت') اوف وایت
+                  option(value='اوف وایت 1') اوف وایت 1
+                  option(value='اوف وایت 2') اوف وایت 2
+                  option(value='برتقالي') برتقالي
+                  option(value='برتقالی') برتقالی
+                  option(value='تبنی') تبنی
+                  option(value='جوزی') جوزی
+                  option(value='جۆزی') جۆزی
+                  option(value='خاكی') خاكی
+                  option(value='ذهبي') ذهبي
+                  option(value='ذهبی') ذهبی
+                  option(value='رصاصي') رصاصي
+                  option(value='رصاصي غامق') رصاصي غامق
+                  option(value='رصاصی') رصاصی
+                  option(value='رصاصی (گرێی)') رصاصی (گرێی)
+                  option(value='رصاصی غامق') رصاصی غامق
+                  option(value='ره‌ش') ره‌ش
+                  option(value='ره‌ش و سۆر') ره‌ش و سۆر
+                  option(value='زه‌رد') زه‌رد
+                  option(value='زه‌رد ( یلۆ)') زه‌رد ( یلۆ)
+                  option(value='زه‌رد و كه‌سك په‌نجه‌ ره‌ش') زه‌رد و كه‌سك په‌نجه‌ ره‌ش
+                  option(value='سلفر') سلفر
+                  option(value='سه‌ر سۆر') سه‌ر سۆر
+                  option(value='سه‌وز') سه‌وز
+                  option(value='سپی') سپی
+                  option(value='سپی (وایت)') سپی (وایت)
+                  option(value='سپی ده‌سك ره‌ش') سپی ده‌سك ره‌ش
+                  option(value='سپی و زه‌رد') سپی و زه‌رد
+                  option(value='سپێشه‌ل') سپێشه‌ل
+                  option(value='سۆر') سۆر
+                  option(value='سۆر ( رید)') سۆر ( رید)
+                  option(value='سۆر و ره‌ش') سۆر و ره‌ش
+                  option(value='شامپانی') شامپانی
+                  option(value='شفاف') شفاف
+                  option(value='شین') شین
+                  option(value='شین (هیڤی)') شین (هیڤی)
+                  option(value='شینی ئاسمانی') شینی ئاسمانی
+                  option(value='صاجي') صاجي
+                  option(value='صاجی') صاجی
+                  option(value='فضی') فضی
+                  option(value='فضی نیكل') فضی نیكل
+                  option(value='قاوه‌یی په‌نجه‌ ره‌ش') قاوه‌یی په‌نجه‌ ره‌ش
+                  option(value='قرمیدی') قرمیدی
+                  option(value='قهوائی') قهوائی
+                  option(value='كاكاوی') كاكاوی
+                  option(value='كریمی') كریمی
+                  option(value='كلیر شفاف') كلیر شفاف
+                  option(value='كه‌سك') كه‌سك
+                  option(value='ملون') ملون
+                  option(value='نارنجى') نارنجى
+                  option(value='نارنجی') نارنجی
+                  option(value='نارنجی و سپپی') نارنجی و سپپی
+                  option(value='نومی') نومی
+                  option(value='نيللي') نيللي
+                  option(value='نیكل') نیكل
+                  option(value='نیللی') نیللی
+                  option(value='نیللی (نیڤی)') نیللی (نیڤی)
+                  option(value='نیوترال') نیوترال
+                  option(value='پرتقالی') پرتقالی
+                  option(value='ڕصاصی') ڕصاصی
+                  option(value='کرێمی') کرێمی
+
             .row
               .form-group.col-md-2
                 label پەکێج
@@ -61,8 +144,15 @@ block content
               .form-group.col-md-2
                 label یەکەی پێوانە
                 select(name="itemUnit" class="form-control")
-                  each item,i in itemUnit
-                    option(value=item['unitName'])=item['unitName']
+                  option(value='لتر') لتر
+                  option(value='گالۆن') گالۆن
+                  option(value='ئینج') ئینج
+                  option(value='سم') سم
+                  option(value='مل') مل
+                  option(value='خشونه‌') خشونه‌
+                  option(value='مه‌تر') مه‌تر
+                  option(value='یارد') یارد
+                  option(value='كيلۆ') كيلۆ
               .form-group.col-md-2
                 label بڕی پێوانە
                 input.form-control(name="weight" type='number' step='any' required)
